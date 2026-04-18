@@ -1,0 +1,17 @@
+pre-commit:
+  parallel: true
+  commands:
+    rubocop_format:
+      run: docker compose run --rm app bundle exec rubocop -A --only Layout
+    rubocop_lint:
+      run: docker compose run --rm app bundle exec rubocop
+    erb_lint:
+      run: docker compose run --rm app bundle exec erb_lint app/views
+
+pre-push:
+  commands:
+    rspec:
+      run: |
+        docker compose up -d
+        docker compose exec -T app rails db:prepare
+        docker compose exec -T app bundle exec rspec
