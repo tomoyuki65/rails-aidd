@@ -42,7 +42,15 @@ module Src
     # タイムゾーン設定
     config.time_zone = ENV.fetch("TZ", "UTC")
 
-    # ロケール設定
-    config.i18n.default_locale = :ja
+    # ジェネレーター設定
+    config.generators do |g|
+      g.test_framework :rspec
+      g.fixture_replacement :factory_bot, dir: "spec/factories"
+      g.view_specs false
+      g.helper_specs false
+      g.routing_specs false
+      g.controller_specs false
+      g.system_tests nil
+    end
   end
 end
