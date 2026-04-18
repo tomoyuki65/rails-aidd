@@ -1,0 +1,36 @@
+services:
+  app:
+    container_name: rails-app
+    build:
+      context: .
+      dockerfile: ./deploy/docker/local/ruby/Dockerfile
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b 0.0.0.0 -p 3000"
+    volumes:
+      - ./src:/src
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    tty: true
+    stdin_open: true
+    depends_on:
+      - db
+  db:
+    container_name: rails-db
+    build:
+      context: .
+      dockerfile: ./deploy/docker/local/db/Dockerfile
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      TZ: ${TZ}
+      # ローカル環境でもパスワードを有効化する設定
+      POSTGRES_INITDB_ARGS: --auth-local=scram-sha-256 --auth-host=scram-sha-256
+    volumes:
+      - rails-db-data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+volumes:
+  rails-db-data:
