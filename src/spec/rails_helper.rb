@@ -41,7 +41,7 @@ RSpec.configure do |config|
   # config.fixture_paths = [
   #   Rails.root.join('spec/fixtures')
   # ]
-
+    
   # FactoryBotの設定を追加
   config.include FactoryBot::Syntax::Methods
 
