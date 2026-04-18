@@ -41,7 +41,7 @@ module Src
 
     # タイムゾーン設定
     config.time_zone = ENV.fetch("TZ", "UTC")
-    
+
     # ロケール設定
     config.i18n.default_locale = :ja
   end
