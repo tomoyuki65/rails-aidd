@@ -1,0 +1,52 @@
+# --- ディスク破壊（即禁止） ---
+prefix_rule(
+    pattern=["mkfs", "dd if=", "wipefs"],
+    decision="forbidden",
+    justification="ストレージ破壊操作"
+)
+
+# --- Git履歴破壊（即禁止） ---
+prefix_rule(
+    pattern=["git push --force", "git push -f", "git push --force-with-lease"],
+    decision="forbidden",
+    justification="履歴改変（強制push）によるリポジトリ破壊の可能性"
+)
+
+# --- GitHub CLI 危険操作 ---
+prefix_rule(
+    pattern=["gh repo delete"],
+    decision="forbidden",
+    justification="リポジトリ削除（不可逆）"
+)
+
+prefix_rule(
+    pattern=["gh pr merge --admin"],
+    decision="ask",
+    justification="保護ルール無視の強制マージ"
+)
+
+prefix_rule(
+    pattern=["gh workflow run"],
+    decision="ask",
+    justification="CI/CDの強制実行"
+)
+
+prefix_rule(
+    pattern=["gh secret set", "gh secret delete"],
+    decision="ask",
+    justification="機密情報の変更"
+)
+
+# --- 危険削除（確認） ---
+prefix_rule(
+    pattern=["rm -rf", "sudo rm"],
+    decision="ask",
+    justification="不可逆削除の可能性"
+)
+
+# --- 権限昇格 ---
+prefix_rule(
+    pattern=["sudo"],
+    decision="ask",
+    justification="システム影響が大きい"
+)

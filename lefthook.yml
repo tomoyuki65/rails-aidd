@@ -7,6 +7,8 @@ pre-commit:
       run: docker compose run --rm app bundle exec rubocop
     erb_lint:
       run: docker compose run --rm app bundle exec erb_lint app/views
+    brakeman:
+      run: docker compose run --rm app bundle exec brakeman --no-pager
 
 pre-push:
   commands:
