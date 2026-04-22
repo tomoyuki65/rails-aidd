@@ -76,7 +76,10 @@ jobs:
         run: docker compose up -d
 
       - name: DB接続待機処理
-        run: docker compose exec app bash -c "until pg_isready -h db -U ${DB_USER}; do sleep 1; done"
+        run: |
+          until docker compose exec db pg_isready -U postgres; do
+            sleep 1
+          done
 
       - name: DB作成とマイグレーションの実行
         run: docker compose run --rm app bundle exec rails db:prepare
