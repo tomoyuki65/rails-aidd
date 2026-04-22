@@ -72,7 +72,7 @@ jobs:
       - name: DB接続待機処理
         run: docker compose exec app bash -c "until pg_isready -h db -U ${DB_USER}; do sleep 1; done"
 
-      - name: マイグレーションの実行
+      - name: DB作成とマイグレーションの実行
         run: docker compose run --rm app bundle exec rails db:prepare
 
       - name: テストの実行（RSpec）
