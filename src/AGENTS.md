@@ -102,3 +102,63 @@ srcでは以下を行ってはならない：
 
 srcは「設計を実装する場所」ではなく  
 **「規約をコードに写像する機械である」**
+
+---
+
+## 実装後の必須チェック（重要）
+
+コード修正・追加が一段落した場合、エージェントは必ず以下のコマンドを順番に実行し、
+警告・エラーが存在しない状態を維持すること。
+
+### コマンド一覧
+
+#### 1. フォーマット修正（レイアウトのみ自動修正）
+
+`docker compose run --rm app bundle exec rubocop -A --only Layout`
+
+---
+
+#### 2. 静的コード解析（Rubocop）
+
+`docker compose run --rm app bundle exec rubocop`
+
+---
+
+#### 3. ビューLint（ビュー変更時のみ）
+
+※ app/views に変更があった場合のみ実行
+
+`docker compose run --rm app bundle exec erb_lint app/views`
+
+---
+
+#### 4. 脆弱性チェック（Brakeman）
+
+`docker compose run --rm app bundle exec brakeman --no-pager`
+
+---
+
+#### 5. テスト実行（RSpec）
+
+`docker compose exec -T app bundle exec rspec`
+
+---
+
+### 実行ルール
+
+- 上記は「実装完了後に必ず順番に実行する」
+- エラー・警告がある状態で完了としてはならない
+- フォーマット（Layout）のみ自動修正を許可する（rubocop -A --only Layout）
+- 上記以外の rubocop の自動修正（-A）は使用してはならない
+- rubocop の指摘は自動修正に依存せず、必ずコード側で修正する
+- テストが失敗している状態で終了してはならない
+- すべてのチェックが通過するまで修正と再実行を繰り返す
+
+---
+
+### 位置づけ
+
+これらのチェックは「設計判断」ではなく、  
+**規約の適用結果を検証する工程**である。
+
+したがって src の責務に含まれる。
