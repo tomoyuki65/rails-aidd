@@ -36,7 +36,7 @@ jobs:
 
     steps:
       - name: リポジトリをチェックアウト
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: 環境変数ファイルをリネーム
         run: cp ./.env.example ./.env
@@ -64,7 +64,7 @@ jobs:
 
     steps:
       - name: リポジトリをチェックアウト
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: 環境変数ファイルをリネーム
         run: cp ./.env.example ./.env
