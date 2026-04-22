@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  # 変更ファイル判定（全体トリガー）
+  changes:
+    runs-on: ubuntu-latest
+
+    outputs:
+      app: ${{ steps.filter.outputs.app }}
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: 差分チェック
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            app:
+              - 'src/**/*.rb'
+              - 'src/**/*.erb'
+              - 'src/Gemfile*'
+
+  # 静的コード解析・脆弱性チェック
+  lint:
+    needs: changes
+    if: needs.changes.outputs.app == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Dockerコンテナのビルド
+        run: docker compose build
+
+      # 静的コード解析
+      - name: Rubocop
+        run: docker compose run --rm app bundle exec rubocop
+
+      # ビュー用の静的コード解析
+      - name: ERB Lint
+        run: docker compose run --rm app bundle exec erb_lint app/views
+
+      # Railsの脆弱性チェック
+      - name: Brakeman
+        run: docker compose run --rm app bundle exec brakeman --no-pager
+
+  # テスト
+  test:
+    needs: changes
+    if: needs.changes.outputs.app == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Dockerコンテナのビルド
+        run: docker compose build
+
+      - name: Dockerコンテナの起動
+        run: docker compose up -d
+
+      - name: DB接続待機処理
+        run: docker compose exec app bash -c "until pg_isready -h db -U ${DB_USER}; do sleep 1; done"
+
+      - name: マイグレーションの実行
+        run: docker compose run --rm app bundle exec rails db:prepare
+
+      - name: テストの実行（RSpec）
+        run: docker compose exec -T app bundle exec rspec
