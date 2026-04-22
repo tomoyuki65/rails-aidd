@@ -38,6 +38,9 @@ jobs:
       - name: リポジトリをチェックアウト
         uses: actions/checkout@v4
 
+      - name: 環境変数ファイルをリネーム
+        run: cp ./.env.example ./.env
+
       - name: Dockerコンテナのビルド
         run: docker compose build
 
@@ -62,6 +65,9 @@ jobs:
     steps:
       - name: リポジトリをチェックアウト
         uses: actions/checkout@v4
+
+      - name: 環境変数ファイルをリネーム
+        run: cp ./.env.example ./.env
 
       - name: Dockerコンテナのビルド
         run: docker compose build

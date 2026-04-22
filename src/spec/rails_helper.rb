@@ -89,4 +89,3 @@ end
 
 # capybara設定
 Capybara.default_driver = :selenium_chrome_headless
-
