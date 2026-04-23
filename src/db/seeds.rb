@@ -7,3 +7,18 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+[
+  "一日一善。",
+  "継続は力なり。",
+  "雨降って地固まる。",
+  "石の上にも三年。",
+  "初心忘るべからず。",
+  "七転び八起き。",
+  "笑う門には福来る。",
+  "千里の道も一歩から。",
+  "案ずるより産むが易し。",
+  "有言実行。"
+].each do |text|
+  Quote.find_or_create_by!(text:)
+end
