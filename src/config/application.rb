@@ -39,6 +39,9 @@ module Src
     # Don't generate system test files.
     config.generators.system_tests = nil
 
+    config.autoload_paths << Rails.root.join("app/domains")
+    config.eager_load_paths << Rails.root.join("app/domains")
+
     # タイムゾーン設定
     config.time_zone = ENV.fetch("TZ", "UTC")
 
