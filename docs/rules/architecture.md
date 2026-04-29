@@ -57,7 +57,10 @@
  |    ├── /resources（一般的な業務領域・アクティブレコード）
  |    |     ※例：user.rbやpayment_gateway.rbなどを置く
  |    |
- |    └── /shared（横断関心）
+ |    ├── /shared（横断関心）
+ |    |
+ |    └── /container（DIコンテナ層）
+ |          ※ユースケース単位を前提として適切なディレクトリを切ったりして格納
  |
  └── /spec（テストコード）
 ```
@@ -199,8 +202,9 @@
 
 ### 呼び出し方向（実行フロー）
 
-- controller → domains/use_cases または features/services または resources
-- domains/use_cases → repositories → models
+- controller → container または features/services または resources
+  - domainsおよび必要に応じたfeatures/servicesは、`/container`にてDI（依存注入）を行い、ユースケース単位で構成・組み立てる
+- container → repositories → models
 - features/services → models
 - resources → models
 - shared （全レイヤーから参照可能）
@@ -215,6 +219,7 @@
 - resources：一般的な業務領域、複雑だが競争優位性を生み出さずに共通の仕組みを利用するビジネスをここに集約
 - shared：横断関心、各レイヤーから利用可能な共通の処理を集約
 - models：データ層
+- container：DIコンテナ層
 
 ---
 
