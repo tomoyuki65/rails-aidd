@@ -21,32 +21,32 @@ prefix_rule(
 
 prefix_rule(
     pattern=["gh pr merge --admin"],
-    decision="ask",
+    decision="prompt",
     justification="保護ルール無視の強制マージ"
 )
 
 prefix_rule(
     pattern=["gh workflow run"],
-    decision="ask",
+    decision="prompt",
     justification="CI/CDの強制実行"
 )
 
 prefix_rule(
     pattern=["gh secret set", "gh secret delete"],
-    decision="ask",
+    decision="prompt",
     justification="機密情報の変更"
 )
 
 # --- 危険削除（確認） ---
 prefix_rule(
     pattern=["rm -rf", "sudo rm"],
-    decision="ask",
+    decision="prompt",
     justification="不可逆削除の可能性"
 )
 
 # --- 権限昇格 ---
 prefix_rule(
     pattern=["sudo"],
-    decision="ask",
+    decision="prompt",
     justification="システム影響が大きい"
 )
